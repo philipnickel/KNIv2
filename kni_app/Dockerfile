@@ -1,3 +1,21 @@
+FROM node:20-bookworm-slim AS frontend-build
+
+WORKDIR /app
+ENV NODE_ENV=production
+
+COPY package.json package-lock.json ./
+RUN npm ci --no-audit --no-fund
+
+COPY tailwind.config.js webpack.config.js ./
+COPY static_src ./static_src
+
+# Ensure the output directory exists before running the build
+RUN mkdir -p static_compiled
+
+# Build the production frontend assets that Django will later collect
+RUN npm run build:prod
+
+
 FROM python:3.12-slim AS production
 
 # Install dependencies in a virtualenv
@@ -42,6 +60,12 @@ RUN pip install --no-cache -r requirements.txt
 
 # Copy application code.
 COPY --chown=wagtail . .
+
+# Remove any pre-built static bundle that might have been checked into the repo
+RUN rm -rf static_compiled && mkdir -p static_compiled
+
+# Copy the freshly built frontend assets from the build stage
+COPY --chown=wagtail --from=frontend-build /app/static_compiled ./static_compiled
 
 # Collect static files with enhanced error handling and validation
 # This ensures static files are properly collected and the manifest is generated correctly

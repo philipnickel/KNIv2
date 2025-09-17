@@ -7,9 +7,8 @@ DEBUG = False
 # This provides both compression and manifest hashing for cache busting
 STORAGES["staticfiles"]["BACKEND"] = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-# WhiteNoise manifest strict mode - set to False to handle missing files gracefully
-# This prevents deployment failures if any static files are missing from the manifest
-WHITENOISE_MANIFEST_STRICT = False
+# WhiteNoise manifest strict mode keeps the build honest by failing on missing assets
+WHITENOISE_MANIFEST_STRICT = True
 
 # WhiteNoise configuration for production optimization
 # Set max age for static files (1 year for immutable files with hashed names)
