@@ -7,6 +7,7 @@ COPY package.json package-lock.json ./
 RUN npm ci --no-audit --no-fund
 
 COPY tailwind.config.js webpack.config.js ./
+COPY templates ./templates
 COPY static_src ./static_src
 
 # Ensure the output directory exists before running the build
