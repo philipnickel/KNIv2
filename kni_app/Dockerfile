@@ -43,10 +43,13 @@ RUN pip install --no-cache -r requirements.txt
 # Copy application code.
 COPY --chown=wagtail . .
 
-# Collect static. This command will move static files from application
-# directories and "static_compiled" folder to the main static directory that
-# will be served by the WSGI server.
-RUN SECRET_KEY=none python manage.py collectstatic --noinput --clear
+# Collect static files with enhanced error handling and validation
+# This ensures static files are properly collected and the manifest is generated correctly
+RUN SECRET_KEY=build-time-secret python manage.py collectstatic --noinput --clear --verbosity=2 && \
+    # Run deployment health check to validate static files
+    python scripts/deployment_health_check.py && \
+    # Set proper permissions for static files
+    chmod -R 755 static/
 
 # Runtime command that executes when "docker run" is called, it does the
 # following:
