@@ -168,12 +168,13 @@ STORAGES = {
     "default": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
-    # ManifestStaticFilesStorage is recommended in production, to prevent
-    # outdated JavaScript / CSS assets being served from cache
+    # WhiteNoise's ManifestStaticFilesStorage is recommended for modern Django deployments.
+    # It provides better performance and caching behavior than Django's default implementation.
+    # This prevents outdated JavaScript / CSS assets being served from cache
     # (e.g. after a Wagtail upgrade).
-    # See https://docs.djangoproject.com/en/4.2/ref/contrib/staticfiles/#manifeststaticfilesstorage
+    # See https://whitenoise.readthedocs.io/en/latest/django.html#storage-backend
     "staticfiles": {
-        "BACKEND": "django.contrib.staticfiles.storage.ManifestStaticFilesStorage",
+        "BACKEND": "whitenoise.storage.ManifestStaticFilesStorage",
     },
 }
 
