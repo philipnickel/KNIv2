@@ -1,4 +1,4 @@
-FROM python:3.12-slim as production
+FROM python:3.12-slim AS production
 
 # Install dependencies in a virtualenv
 ENV VIRTUAL_ENV=/venv
@@ -57,4 +57,4 @@ RUN SECRET_KEY=none python manage.py collectstatic --noinput --clear
 #   PRACTICE. The database should be migrated manually or using the release
 #   phase facilities of your hosting platform. This is used only so the
 #   Wagtail instance can be started with a simple "docker run" command.
-CMD set -xe; python manage.py createcachetable; python manage.py migrate --noinput; gunicorn KNI.wsgi:application
+CMD ["sh", "-c", "set -xe; python manage.py createcachetable; python manage.py migrate --noinput; gunicorn KNI.wsgi:application"]
