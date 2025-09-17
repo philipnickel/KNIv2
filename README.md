@@ -1,4 +1,4 @@
-# KNI v2 - Wagtail CMS
+jj# KNI v2 - Wagtail CMS
 
 A Docker-ready Wagtail CMS template optimized for GitHub integration and Dokploy deployment.
 
