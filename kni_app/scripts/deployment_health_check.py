@@ -32,46 +32,46 @@ def check_static_files():
         paths = manifest.get('paths', {})
         print(f"INFO: Manifest contains {len(paths)} static file entries")
 
-        # Check for any CSS and JS files to ensure basic functionality
+        # Check critical Wagtail admin files that are essential for functionality
+        critical_files = [
+            'wagtailadmin/css/core.css',  # Wagtail admin styling
+            'wagtailadmin/js/core.js',    # Wagtail admin functionality
+            'admin/css/base.css',         # Django admin styling
+            'admin/js/core.js',           # Django admin functionality
+        ]
+
+        missing_critical = []
+        for file_path in critical_files:
+            found = False
+            # Check for exact match or hashed version
+            for manifest_key in paths.keys():
+                if manifest_key == file_path or manifest_key.startswith(file_path.replace('.css', '.').replace('.js', '.')):
+                    hashed_filename = paths[manifest_key]
+                    physical_path = static_root / hashed_filename
+                    if physical_path.exists():
+                        print(f"OK: {file_path} found as {manifest_key} -> {hashed_filename}")
+                        found = True
+                        break
+
+            if not found:
+                missing_critical.append(file_path)
+                print(f"ERROR: Critical file {file_path} not found")
+
+        if missing_critical:
+            print(f"ERROR: {len(missing_critical)} critical files missing")
+            return False
+
+        # Validate basic file counts
         css_files = [key for key in paths.keys() if key.endswith('.css')]
         js_files = [key for key in paths.keys() if key.endswith('.js')]
 
-        if not css_files:
-            print("ERROR: No CSS files found in manifest")
-            return False
+        if len(css_files) < 5:
+            print(f"WARNING: Only {len(css_files)} CSS files found, expected more")
 
-        if not js_files:
-            print("ERROR: No JS files found in manifest")
-            return False
+        if len(js_files) < 10:
+            print(f"WARNING: Only {len(js_files)} JS files found, expected more")
 
-        print(f"INFO: Found {len(css_files)} CSS files and {len(js_files)} JS files")
-
-        # Check optional favicon files (warn but don't fail)
-        optional_files = [
-            'images/favicons/favicon.ico',
-            'images/favicons/favicon.svg',
-            'images/favicons/apple-touch-icon.png',
-        ]
-
-        for file_path in optional_files:
-            if file_path not in paths:
-                print(f"WARNING: {file_path} not found in manifest (optional)")
-            else:
-                hashed_filename = paths[file_path]
-                physical_path = static_root / hashed_filename
-                if not physical_path.exists():
-                    print(f"WARNING: {hashed_filename} not found on filesystem (optional)")
-                else:
-                    print(f"OK: {file_path} -> {hashed_filename}")
-
-        # Validate that some core static files exist
-        sample_files = list(paths.keys())[:5]
-        for file_path in sample_files:
-            hashed_filename = paths[file_path]
-            physical_path = static_root / hashed_filename
-            if not physical_path.exists():
-                print(f"ERROR: {hashed_filename} not found on filesystem")
-                return False
+        print(f"INFO: Found {len(css_files)} CSS files and {len(js_files)} JS files total")
 
         print("SUCCESS: All critical static files validated")
         return True
