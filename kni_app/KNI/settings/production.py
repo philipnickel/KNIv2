@@ -2,6 +2,9 @@ from .base import *  # noqa
 
 DEBUG = False
 
+# Static files configuration for production
+# Disable manifest hashing temporarily to fix deployment
+STORAGES["staticfiles"]["BACKEND"] = "django.contrib.staticfiles.storage.StaticFilesStorage"
 
 # Security configuration
 
