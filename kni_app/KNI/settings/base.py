@@ -20,7 +20,18 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 if "SECRET_KEY" in os.environ:
     SECRET_KEY = os.environ["SECRET_KEY"]
 
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "*").split(",")
+allowed_hosts_env = os.environ.get("ALLOWED_HOSTS", "")
+ALLOWED_HOSTS = [host.strip() for host in allowed_hosts_env.split(",") if host.strip()]
+
+if not ALLOWED_HOSTS:
+    ALLOWED_HOSTS = ["*"]
+
+DEFAULT_HOST_WILDCARDS = [".traefik.me"]
+
+if "*" not in ALLOWED_HOSTS:
+    for wildcard in DEFAULT_HOST_WILDCARDS:
+        if wildcard not in ALLOWED_HOSTS:
+            ALLOWED_HOSTS.append(wildcard)
 
 if "CSRF_TRUSTED_ORIGINS" in os.environ:
     CSRF_TRUSTED_ORIGINS = os.environ["CSRF_TRUSTED_ORIGINS"].split(",")
@@ -72,6 +83,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "KNI.utils.middleware.EnsureSiteMiddleware",
     "wagtail.contrib.redirects.middleware.RedirectMiddleware",
 ]
 
