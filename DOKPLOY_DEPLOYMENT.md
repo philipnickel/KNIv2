@@ -66,6 +66,7 @@ CACHE_CONTROL_STALE_WHILE_REVALIDATE=86400
 1. Click **"Deploy"** button
 2. Monitor build logs for any issues
 3. Wait for deployment to complete
+4. If you use Dokploy preview deployments, remember to set the preview environment's `DATABASE_URL` so the app can reach PostgreSQL.
 
 ## Post-Deployment Setup
 
