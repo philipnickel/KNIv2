@@ -43,6 +43,14 @@ RUN pip install --no-cache -r requirements.txt
 # Copy application code.
 COPY --chown=wagtail . .
 
+# Install Node.js and build frontend assets
+RUN apt-get update && apt-get install -y curl && \
+    curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get install -y nodejs && \
+    npm install && \
+    npm run build:prod && \
+    rm -rf node_modules
+
 # Collect static. This command will move static files from application
 # directories and "static_compiled" folder to the main static directory that
 # will be served by the WSGI server.
