@@ -40,6 +40,7 @@ Visit: http://localhost:8000
    - `SECRET_KEY` - Django secret key
    - `DATABASE_URL` - Database connection (optional, defaults to SQLite)
    - `ALLOWED_HOSTS` - Comma-separated host list
+4. Add a bind mount for uploads (e.g. host `/srv/dokploy/kni-webapp/media` → container `/app/media`) so user media persists across deploys
 
 ### Environment Variables
 ```bash
@@ -58,6 +59,7 @@ AWS_SECRET_ACCESS_KEY=your-secret
 ## Storage Options
 
 **Local (Default)**: SQLite + local filesystem
+**Dokploy volume**: Mount `/app/media` to a persistent host path for uploads
 **Cloud**: PostgreSQL + AWS S3 (auto-configured when `AWS_STORAGE_BUCKET_NAME` is set)
 
 ## Data Management
