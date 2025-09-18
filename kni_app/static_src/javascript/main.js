@@ -3,6 +3,9 @@ import HeaderSearchPanel from "./components/header-search-panel";
 import MobileMenu from "./components/mobile-menu";
 import SkipLink from './components/skip-link';
 
+// PrelineUI
+import 'preline/dist/index.js';
+
 import '../sass/main.scss';
 
 
@@ -17,4 +20,9 @@ document.addEventListener('DOMContentLoaded', () => {
     initComponent(SkipLink);
     initComponent(HeaderSearchPanel);
     initComponent(MobileMenu);
+    
+    // Initialize PrelineUI components
+    if (window.HSStaticMethods) {
+        window.HSStaticMethods.autoInit();
+    }
 });

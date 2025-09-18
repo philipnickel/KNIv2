@@ -1,0 +1,30 @@
+{% load wagtailcore_tags %}
+
+<div class="preline-accordion-section">
+    {% if value.heading %}
+        <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">{{ value.heading }}</h2>
+    {% endif %}
+    
+    <div class="hs-accordion-group">
+        {% for item in value.items %}
+        <div class="hs-accordion hs-accordion-active:border-gray-200 bg-white border -mt-px first:rounded-t-lg last:rounded-b-lg dark:bg-gray-800 dark:border-gray-700" id="hs-accordion-{{ forloop.counter }}">
+            <button class="hs-accordion-toggle hs-accordion-active:text-blue-600 py-4 px-5 inline-flex items-center gap-x-3 w-full font-semibold text-start text-gray-800 rounded-lg transition hover:text-gray-500 focus:outline-none focus:text-gray-500 focus:ring-1 focus:ring-gray-200 dark:text-gray-200 dark:hover:text-gray-400 dark:focus:outline-none dark:focus:text-gray-400 dark:focus:ring-gray-700" aria-expanded="false" aria-controls="hs-accordion-collapse-{{ forloop.counter }}">
+                <svg class="hs-accordion-active:hidden hs-accordion-active:text-blue-600 hs-accordion-active:group-hover:text-blue-600 block w-3 h-3 text-gray-600 group-hover:text-gray-500 dark:text-gray-400" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8 4L8 12M4 8L12 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <svg class="hs-accordion-active:block hs-accordion-active:text-blue-600 hs-accordion-active:group-hover:text-blue-600 hidden w-3 h-3 text-gray-600 group-hover:text-gray-500 dark:text-gray-400" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 8L12 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                {{ item.title }}
+            </button>
+            <div id="hs-accordion-collapse-{{ forloop.counter }}" class="hs-accordion-content w-full overflow-hidden transition-[height] duration-300" aria-labelledby="hs-accordion-{{ forloop.counter }}">
+                <div class="pb-4 px-5">
+                    <div class="text-gray-800 dark:text-gray-200">
+                        {{ item.content|richtext }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>

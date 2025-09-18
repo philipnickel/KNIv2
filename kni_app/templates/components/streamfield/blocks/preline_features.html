@@ -1,0 +1,59 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<!-- Features -->
+<div class="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
+    {% if value.image %}
+        <div class="aspect-w-16 aspect-h-7">
+            {% image value.image fill-1200x600 class="w-full object-cover rounded-xl" %}
+        </div>
+    {% endif %}
+
+    <!-- Grid -->
+    <div class="{% if value.image %}mt-5 lg:mt-16{% endif %} grid lg:grid-cols-3 gap-8 lg:gap-12">
+        <div class="lg:col-span-1">
+            <h2 class="font-bold text-2xl md:text-3xl text-gray-800 dark:text-neutral-200">
+                {{ value.heading }}
+            </h2>
+            {% if value.description %}
+                <p class="mt-2 md:mt-4 text-gray-500 dark:text-neutral-500">
+                    {{ value.description }}
+                </p>
+            {% endif %}
+        </div>
+        <!-- End Col -->
+
+        <div class="lg:col-span-2">
+            <div class="grid sm:grid-cols-2 gap-8 md:gap-12">
+                {% for feature in value.features %}
+                    <!-- Icon Block -->
+                    <div class="flex gap-x-5">
+                        {% if feature.icon_svg %}
+                            <div class="shrink-0 mt-1 size-6 text-blue-600 dark:text-blue-500">
+                                {{ feature.icon_svg|safe }}
+                            </div>
+                        {% else %}
+                            <!-- Default icon if none provided -->
+                            <svg class="shrink-0 mt-1 size-6 text-blue-600 dark:text-blue-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 12l2 2 4-4"/>
+                                <path d="M21 12c.552 0 1-.448 1-1V5c0-.552-.448-1-1-1H3c-.552 0-1 .448-1 1v6c0 .552.448 1 1 1h18z"/>
+                                <path d="M3 12v6c0 .552.448 1 1 1h16c.552 0 1-.448 1-1v-6"/>
+                            </svg>
+                        {% endif %}
+                        <div class="grow">
+                            <h3 class="text-lg font-semibold text-gray-800 dark:text-white">
+                                {{ feature.title }}
+                            </h3>
+                            <p class="mt-1 text-gray-600 dark:text-neutral-400">
+                                {{ feature.description }}
+                            </p>
+                        </div>
+                    </div>
+                    <!-- End Icon Block -->
+                {% endfor %}
+            </div>
+        </div>
+        <!-- End Col -->
+    </div>
+    <!-- End Grid -->
+</div>
+<!-- End Features -->
