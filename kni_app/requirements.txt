@@ -1,8 +1,40 @@
-django>=4.2,<5.2
-wagtail>=6.4,<6.5
-dj-database-url
-psycopg[binary]
-whitenoise
-gunicorn==23.0.0
-django-storages[s3]
-wagtail-storages
+# Django and Wagtail dependencies
+Django>=4.2.0,<5.0
+wagtail>=5.2.0,<6.0
+wagtail[redis]>=5.2.0,<6.0
+
+# Database
+psycopg2-binary>=2.9.0
+
+# Production server
+gunicorn>=21.0.0
+
+# Static files
+whitenoise>=6.5.0
+
+# Environment variables
+python-decouple>=3.8
+
+# Image processing
+Pillow>=10.0.0
+
+# Development dependencies
+django-debug-toolbar>=4.2.0
+django-extensions>=3.2.0
+
+# Testing
+pytest>=7.4.0
+pytest-django>=4.5.0
+pytest-cov>=4.1.0
+
+# Code quality
+black>=23.0.0
+flake8>=6.0.0
+isort>=5.12.0
+
+# Documentation
+mkdocs>=1.5.0
+mkdocs-material>=9.4.0
+mkdocs-git-revision-date-localized-plugin>=1.2.0
+mkdocs-git-committers-plugin-2>=1.1.0
+pymdown-extensions>=10.0.0
