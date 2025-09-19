@@ -4,8 +4,15 @@ from django.test import TestCase
 from wagtail.models import Page, Site
 from wagtail.test.utils import WagtailTestUtils
 
-from .models import (ArticleTopic, AuthorSnippet, BasePage, PageRelatedPage,
-                     SocialMediaSettings, Statistic, SystemMessagesSettings)
+from .models import (
+    ArticleTopic,
+    AuthorSnippet,
+    BasePage,
+    PageRelatedPage,
+    SocialMediaSettings,
+    Statistic,
+    SystemMessagesSettings,
+)
 
 
 class AuthorSnippetTests(TestCase, WagtailTestUtils):

@@ -12,8 +12,12 @@ from wagtail.test.utils import WagtailTestUtils
 from home.models import HomePage
 from news.models import ArticlePage, NewsListingPage
 from standardpages.models import IndexPage, StandardPage
-from utils.models import (ArticleTopic, AuthorSnippet, SocialMediaSettings,
-                          SystemMessagesSettings)
+from utils.models import (
+    ArticleTopic,
+    AuthorSnippet,
+    SocialMediaSettings,
+    SystemMessagesSettings,
+)
 
 
 class SiteIntegrationTests(TestCase, WagtailTestUtils):
