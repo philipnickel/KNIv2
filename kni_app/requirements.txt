@@ -1,40 +1,40 @@
 # Django and Wagtail dependencies
-Django>=5.2.0,<6.0
-wagtail>=7.1.0,<8.0
-wagtail[redis]>=7.1.0,<8.0
+Django
+wagtail
+wagtail[redis]
 
 # Database
-psycopg2-binary>=2.9.0
+psycopg2-binary
 
 # Production server
-gunicorn>=21.0.0
+gunicorn
 
 # Static files
-whitenoise>=6.5.0
+whitenoise
 
 # Environment variables
-python-decouple>=3.8
+python-decouple
 
 # Image processing
-Pillow>=10.0.0
+Pillow
 
 # Development dependencies
-django-debug-toolbar>=4.2.0
-django-extensions>=3.2.0
+django-debug-toolbar
+django-extensions
 
 # Testing
-pytest>=7.4.0
-pytest-django>=4.5.0
-pytest-cov>=4.1.0
+pytest
+pytest-django
+pytest-cov
 
 # Code quality
-black>=23.0.0
-flake8>=6.0.0
-isort>=5.12.0
+black
+flake8
+isort
 
 # Documentation
-mkdocs>=1.5.0
-mkdocs-material>=9.4.0
-mkdocs-git-revision-date-localized-plugin>=1.2.0
-mkdocs-git-committers-plugin-2>=1.1.0
-pymdown-extensions>=10.0.0
+mkdocs
+mkdocs-material
+mkdocs-git-revision-date-localized-plugin
+mkdocs-git-committers-plugin-2
+pymdown-extensions
