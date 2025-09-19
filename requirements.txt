@@ -1,4 +1,8 @@
-# Django and Wagtail dependencies
+# =============================================================================
+# CORE DEPENDENCIES
+# =============================================================================
+
+# Django and Wagtail
 Django
 wagtail
 wagtail[redis]
@@ -18,23 +22,44 @@ python-decouple
 # Image processing
 Pillow
 
-# Development dependencies
+# =============================================================================
+# DEVELOPMENT DEPENDENCIES
+# =============================================================================
+
+# Django development tools
 django-debug-toolbar
 django-extensions
 
-# Testing
+# Code quality and formatting
+black
+flake8
+isort
+mypy
+
+# Security scanning
+safety
+bandit
+semgrep
+
+# =============================================================================
+# TESTING DEPENDENCIES
+# =============================================================================
+
+# Testing framework
 pytest
 pytest-django
 pytest-cov
 
-# Code quality
-black
-flake8
-isort
+# Coverage reporting
+coverage
 
-# Documentation
-mkdocs
-mkdocs-material
-mkdocs-git-revision-date-localized-plugin
-mkdocs-git-committers-plugin-2
-pymdown-extensions
+# End-to-end testing
+playwright
+
+# =============================================================================
+# DOCUMENTATION DEPENDENCIES
+# =============================================================================
+
+# MkDocs documentation
+mkdocs>=1.5.0
+mkdocs-material>=9.0.0

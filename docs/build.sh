@@ -15,8 +15,8 @@ fi
 
 # Install dependencies if not already installed
 if ! command -v mkdocs &> /dev/null; then
-    echo "📦 Installing MkDocs dependencies..."
-    pip install -r ../requirements-docs.txt
+    echo "📦 Installing dependencies..."
+    pip install -r ../requirements.txt
 fi
 
 # Build documentation
@@ -26,4 +26,4 @@ mkdocs build
 
 echo "✅ Documentation build complete!"
 echo "📖 Open site/index.html in your browser to view the documentation"
-echo "🚀 Or run 'mkdocs serve' to start a local development server"
+echo "🚀 Or run 'mkdocs serve' to start a live development server"

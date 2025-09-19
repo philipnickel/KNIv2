@@ -231,4 +231,5 @@ jspm_packages/
 
 # Temporary folders
 tmp/
-temp/
+temp/docs/site/
+kni_app/test-media/

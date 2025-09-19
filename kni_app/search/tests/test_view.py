@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.test import override_settings
 from django.urls import reverse
-from wagtail.models import Site
+from wagtail.models import Page, Site
 from django.test import TestCase
 
 from home.models import HomePage
@@ -13,8 +13,17 @@ class SearchViewTests(TestCase):
         super().setUpTestData()
         site = Site.objects.get(is_default_site=True)
         site.hostname = "testserver"
+        # Ensure there is a HomePage; create one if missing and set as site root
+        home = HomePage.objects.first()
+        if home is None:
+            root = Page.get_first_root_node()
+            # Use a unique slug to avoid conflicts in test DB setup
+            home = HomePage(title="Test Home", slug="test-home")
+            root.add_child(instance=home)
+            home.save_revision().publish()
+            site.root_page = home
         site.save()
-        cls.home = HomePage.objects.first()
+        cls.home = home
         cls.search_url = reverse("search")
 
     def test_search_listings_always_return_noindex(self):
