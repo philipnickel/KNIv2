@@ -45,9 +45,7 @@ jobs:
       - name: Set up test environment
         run: |
           cd kni_app
-          python manage.py collectstatic --noinput
-          python manage.py createcachetable
-          python manage.py migrate --run-syncdb
+          python manage.py collectstatic --noinput --settings=settings.test
 
       - name: Run tests
         run: |
@@ -64,7 +62,7 @@ jobs:
 
       - name: Upload coverage to Codecov
         if: matrix.python-version == '3.11'
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           file: ./kni_app/coverage.xml
           flags: unittests
@@ -136,7 +134,7 @@ jobs:
           semgrep --config=auto kni_app/ --json --output=semgrep-report.json
 
       - name: Upload security reports
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: security-reports
           path: |
@@ -236,14 +234,12 @@ jobs:
       - name: Set up test environment
         run: |
           cd kni_app
-          python manage.py collectstatic --noinput
-          python manage.py createcachetable
-          python manage.py migrate --run-syncdb
+          python manage.py collectstatic --noinput --settings=settings.test
 
       - name: Create test data
         run: |
           cd kni_app
-          python manage.py shell -c "
+          python manage.py shell --settings=settings.test -c "
           from django.contrib.auth import get_user_model
           from wagtail.models import Site, Page
           from home.models import HomePage
@@ -274,7 +270,7 @@ jobs:
       - name: Start Django server
         run: |
           cd kni_app
-          python manage.py runserver 0.0.0.0:8000 &
+          python manage.py runserver 0.0.0.0:8000 --settings=settings.test &
           sleep 10
 
       - name: Run Playwright tests
@@ -319,7 +315,7 @@ jobs:
           "
 
       - name: Upload screenshots
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: e2e-screenshots
           path: |
@@ -358,7 +354,7 @@ jobs:
           tar -czf kni-build.tar.gz kni_app/ requirements.txt Makefile
 
       - name: Upload build artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: kni-build
           path: kni-build.tar.gz
@@ -373,7 +369,7 @@ jobs:
     
     steps:
       - name: Download build artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: kni-build
           path: .
@@ -393,7 +389,7 @@ jobs:
     
     steps:
       - name: Download build artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: kni-build
           path: .

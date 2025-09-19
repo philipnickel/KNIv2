@@ -18,6 +18,7 @@ whitenoise
 
 # Environment variables
 python-decouple
+dj-database-url
 
 # Image processing
 Pillow
