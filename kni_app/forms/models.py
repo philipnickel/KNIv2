@@ -1,11 +1,10 @@
 from django.db import models
 from modelcluster.fields import ParentalKey
+from utils.models import BasePage
 from wagtail.admin.panels import FieldPanel, FieldRowPanel, InlinePanel, MultiFieldPanel
 from wagtail.contrib.forms.models import AbstractEmailForm, AbstractFormField
 from wagtail.contrib.forms.panels import FormSubmissionsPanel
 from wagtail.fields import RichTextField
-
-from utils.models import BasePage
 
 
 class FormField(AbstractFormField):

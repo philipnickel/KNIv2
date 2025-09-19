@@ -9,7 +9,10 @@ from django.db.models import QuerySet
 from django.utils.decorators import method_decorator
 from django.utils.functional import cached_property
 from django.utils.text import slugify
+from images.models import CustomImage
 from modelcluster.fields import ParentalKey
+from utils.cache import get_default_cache_control_decorator
+from utils.query import order_by_pk_position
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
 from wagtail.fields import RichTextField
@@ -17,10 +20,6 @@ from wagtail.models import Orderable, Page
 from wagtail.rich_text import expand_db_html
 from wagtail.snippets.models import register_snippet
 from willow.image import Image as WillowImage
-
-from images.models import CustomImage
-from utils.cache import get_default_cache_control_decorator
-from utils.query import order_by_pk_position
 
 
 # Related pages

@@ -6,9 +6,6 @@ These tests verify that different components work together correctly.
 from django.test import Client, TestCase
 from django.urls import reverse
 from django.utils import timezone
-from wagtail.models import Page, Site
-from wagtail.test.utils import WagtailTestUtils
-
 from home.models import HomePage
 from news.models import ArticlePage, NewsListingPage
 from standardpages.models import IndexPage, StandardPage
@@ -18,6 +15,8 @@ from utils.models import (
     SocialMediaSettings,
     SystemMessagesSettings,
 )
+from wagtail.models import Page, Site
+from wagtail.test.utils import WagtailTestUtils
 
 
 class SiteIntegrationTests(TestCase, WagtailTestUtils):

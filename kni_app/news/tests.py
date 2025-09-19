@@ -1,9 +1,8 @@
 from django.test import TestCase
 from django.utils import timezone
+from utils.models import ArticleTopic, AuthorSnippet
 from wagtail.models import Page, Site
 from wagtail.test.utils import WagtailTestUtils
-
-from utils.models import ArticleTopic, AuthorSnippet
 
 from .models import ArticlePage, NewsListingPage
 

@@ -1,10 +1,9 @@
 from django.db import models
+from utils.blocks import StoryBlock
+from utils.models import BasePage
 from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel
 from wagtail.fields import RichTextField, StreamField
 from wagtail.search import index
-
-from utils.blocks import StoryBlock
-from utils.models import BasePage
 
 
 class StandardPage(BasePage):

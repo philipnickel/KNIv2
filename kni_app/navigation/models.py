@@ -1,12 +1,11 @@
 from django.db import models
 from modelcluster.models import ClusterableModel
+from utils.blocks import InternalLinkBlock, LinkStreamBlock
 from wagtail import blocks
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
 from wagtail.fields import StreamField
 from wagtail.snippets.blocks import SnippetChooserBlock
-
-from utils.blocks import InternalLinkBlock, LinkStreamBlock
 
 
 @register_setting(icon="list-ul")

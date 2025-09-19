@@ -7,11 +7,10 @@ from django.http import JsonResponse
 from django.urls import include, path, re_path
 from django.views.decorators.http import require_http_methods
 from django.views.static import serve as serve_static
+from search import views as search_views
 from wagtail import urls as wagtail_urls
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.documents import urls as wagtaildocs_urls
-
-from search import views as search_views
 
 
 @require_http_methods(["GET"])

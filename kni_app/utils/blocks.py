@@ -2,13 +2,12 @@ from collections import defaultdict
 
 from django.core.exceptions import ValidationError
 from django.forms.utils import ErrorList
+from utils.struct_values import CardStructValue, LinkStructValue
 from wagtail import blocks
 from wagtail.blocks.struct_block import StructBlockValidationError
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.snippets.blocks import SnippetChooserBlock
-
-from utils.struct_values import CardStructValue, LinkStructValue
 
 
 class AccordionBlock(blocks.StructBlock):
