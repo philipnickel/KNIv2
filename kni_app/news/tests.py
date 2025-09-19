@@ -3,24 +3,25 @@ from django.utils import timezone
 from wagtail.models import Page, Site
 from wagtail.test.utils import WagtailTestUtils
 
+from utils.models import ArticleTopic, AuthorSnippet
+
 from .models import ArticlePage, NewsListingPage
-from utils.models import AuthorSnippet, ArticleTopic
 
 
 class ArticlePageModelTests(TestCase, WagtailTestUtils):
     def setUp(self):
         # Get the root page
         self.root_page = Page.get_first_root_node()
-        
+
         # Create a site
         self.site = Site.objects.get(is_default_site=True)
         self.site.hostname = "testserver"
         self.site.save()
-        
+
         # Create required snippets
         self.author = AuthorSnippet.objects.create(title="Test Author")
         self.topic = ArticleTopic.objects.create(title="Test Topic", slug="test-topic")
-        
+
         # Create a news listing page
         self.news_listing = NewsListingPage(
             title="News",
@@ -39,7 +40,7 @@ class ArticlePageModelTests(TestCase, WagtailTestUtils):
             publication_date=timezone.now(),
         )
         self.news_listing.add_child(instance=article_page)
-        
+
         self.assertEqual(article_page.title, "Test Article")
         self.assertEqual(article_page.slug, "test-article")
         self.assertEqual(article_page.introduction, "This is a test article")
@@ -56,7 +57,7 @@ class ArticlePageModelTests(TestCase, WagtailTestUtils):
             topic=self.topic,
         )
         self.news_listing.add_child(instance=article_page)
-        
+
         self.assertEqual(article_page.template, "pages/article_page.html")
 
     def test_article_page_parent_page_types(self):
@@ -67,7 +68,7 @@ class ArticlePageModelTests(TestCase, WagtailTestUtils):
             author=self.author,
             topic=self.topic,
         )
-        
+
         # Should be able to add to news listing
         self.news_listing.add_child(instance=article_page)
         self.assertTrue(article_page.live)
@@ -82,7 +83,7 @@ class ArticlePageModelTests(TestCase, WagtailTestUtils):
             topic=self.topic,
         )
         self.news_listing.add_child(instance=article_page)
-        
+
         # Check that introduction and topic are in search fields
         search_fields = [field.field_name for field in article_page.search_fields]
         self.assertIn("introduction", search_fields)
@@ -97,9 +98,13 @@ class ArticlePageModelTests(TestCase, WagtailTestUtils):
             topic=self.topic,
         )
         self.news_listing.add_child(instance=article_page)
-        
+
         # Check that key panels exist
-        panel_names = [panel.field_name for panel in article_page.content_panels if hasattr(panel, 'field_name')]
+        panel_names = [
+            panel.field_name
+            for panel in article_page.content_panels
+            if hasattr(panel, "field_name")
+        ]
         self.assertIn("author", panel_names)
         self.assertIn("publication_date", panel_names)
         self.assertIn("topic", panel_names)
@@ -118,11 +123,11 @@ class ArticlePageModelTests(TestCase, WagtailTestUtils):
             publication_date=now,
         )
         self.news_listing.add_child(instance=article_page)
-        
+
         # Test with publication_date
         expected_date = now.strftime("%d %b %Y")
         self.assertEqual(article_page.display_date, expected_date)
-        
+
         # Test without publication_date (should use first_published_at)
         article_page.publication_date = None
         article_page.save()
@@ -147,7 +152,7 @@ class ArticlePageModelTests(TestCase, WagtailTestUtils):
             featured_section_title="Featured Content",
         )
         self.news_listing.add_child(instance=article_page)
-        
+
         self.assertEqual(article_page.featured_section_title, "Featured Content")
 
 
@@ -155,7 +160,7 @@ class NewsListingPageModelTests(TestCase, WagtailTestUtils):
     def setUp(self):
         # Get the root page
         self.root_page = Page.get_first_root_node()
-        
+
         # Create a site
         self.site = Site.objects.get(is_default_site=True)
         self.site.hostname = "testserver"
@@ -169,7 +174,7 @@ class NewsListingPageModelTests(TestCase, WagtailTestUtils):
             introduction="<p>This is the news section</p>",
         )
         self.root_page.add_child(instance=news_listing)
-        
+
         self.assertEqual(news_listing.title, "News")
         self.assertEqual(news_listing.slug, "news")
         self.assertEqual(news_listing.introduction, "<p>This is the news section</p>")
@@ -182,7 +187,7 @@ class NewsListingPageModelTests(TestCase, WagtailTestUtils):
             slug="news",
         )
         self.root_page.add_child(instance=news_listing)
-        
+
         self.assertEqual(news_listing.template, "pages/news_listing_page.html")
 
     def test_news_listing_page_subpage_types(self):
@@ -192,7 +197,7 @@ class NewsListingPageModelTests(TestCase, WagtailTestUtils):
             slug="news",
         )
         self.root_page.add_child(instance=news_listing)
-        
+
         self.assertEqual(news_listing.subpage_types, ["news.ArticlePage"])
 
     def test_news_listing_page_max_count(self):
@@ -202,7 +207,7 @@ class NewsListingPageModelTests(TestCase, WagtailTestUtils):
             slug="news",
         )
         self.root_page.add_child(instance=news_listing)
-        
+
         self.assertEqual(news_listing.max_count, 1)
 
     def test_news_listing_page_search_fields(self):
@@ -213,7 +218,7 @@ class NewsListingPageModelTests(TestCase, WagtailTestUtils):
             introduction="<p>This is the news section</p>",
         )
         self.root_page.add_child(instance=news_listing)
-        
+
         # Check that introduction is in search fields
         search_fields = [field.field_name for field in news_listing.search_fields]
         self.assertIn("introduction", search_fields)
@@ -225,9 +230,13 @@ class NewsListingPageModelTests(TestCase, WagtailTestUtils):
             slug="news",
         )
         self.root_page.add_child(instance=news_listing)
-        
+
         # Check that key panels exist
-        panel_names = [panel.field_name for panel in news_listing.content_panels if hasattr(panel, 'field_name')]
+        panel_names = [
+            panel.field_name
+            for panel in news_listing.content_panels
+            if hasattr(panel, "field_name")
+        ]
         self.assertIn("introduction", panel_names)
 
     def test_news_listing_page_get_context(self):
@@ -237,11 +246,11 @@ class NewsListingPageModelTests(TestCase, WagtailTestUtils):
             slug="news",
         )
         self.root_page.add_child(instance=news_listing)
-        
+
         # Create some test data
         author = AuthorSnippet.objects.create(title="Test Author")
         topic = ArticleTopic.objects.create(title="Test Topic", slug="test-topic")
-        
+
         article1 = ArticlePage(
             title="Article 1",
             slug="article-1",
@@ -249,7 +258,7 @@ class NewsListingPageModelTests(TestCase, WagtailTestUtils):
             topic=topic,
         )
         news_listing.add_child(instance=article1)
-        
+
         article2 = ArticlePage(
             title="Article 2",
             slug="article-2",
@@ -257,43 +266,44 @@ class NewsListingPageModelTests(TestCase, WagtailTestUtils):
             topic=topic,
         )
         news_listing.add_child(instance=article2)
-        
+
         # Test get_context
         from django.test import RequestFactory
+
         factory = RequestFactory()
-        request = factory.get('/')
-        
+        request = factory.get("/")
+
         context = news_listing.get_context(request)
-        
+
         # Check that context contains expected keys
-        self.assertIn('paginator', context)
-        self.assertIn('paginator_page', context)
-        self.assertIn('is_paginated', context)
-        self.assertIn('topics', context)
-        self.assertIn('matching_topic', context)
+        self.assertIn("paginator", context)
+        self.assertIn("paginator_page", context)
+        self.assertIn("is_paginated", context)
+        self.assertIn("topics", context)
+        self.assertIn("matching_topic", context)
 
 
 class ArticlePageViewTests(TestCase, WagtailTestUtils):
     def setUp(self):
         # Get the root page
         self.root_page = Page.get_first_root_node()
-        
+
         # Create a site
         self.site = Site.objects.get(is_default_site=True)
         self.site.hostname = "testserver"
         self.site.save()
-        
+
         # Create required snippets
         self.author = AuthorSnippet.objects.create(title="Test Author")
         self.topic = ArticleTopic.objects.create(title="Test Topic", slug="test-topic")
-        
+
         # Create a news listing page
         self.news_listing = NewsListingPage(
             title="News",
             slug="news",
         )
         self.root_page.add_child(instance=self.news_listing)
-        
+
         # Create an article page
         self.article_page = ArticlePage(
             title="Test Article",
@@ -313,7 +323,7 @@ class ArticlePageViewTests(TestCase, WagtailTestUtils):
         # Set up site
         self.site.root_page = self.news_listing
         self.site.save()
-        response = self.client.get('/test-article/')
+        response = self.client.get("/test-article/")
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Test Article")
         self.assertContains(response, "This is a test article")
@@ -327,21 +337,21 @@ class ArticlePageViewTests(TestCase, WagtailTestUtils):
         # Set up site
         self.site.root_page = self.news_listing
         self.site.save()
-        response = self.client.get('/test-article/')
+        response = self.client.get("/test-article/")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context['page'], self.article_page)
+        self.assertEqual(response.context["page"], self.article_page)
 
 
 class NewsListingPageViewTests(TestCase, WagtailTestUtils):
     def setUp(self):
         # Get the root page
         self.root_page = Page.get_first_root_node()
-        
+
         # Create a site
         self.site = Site.objects.get(is_default_site=True)
         self.site.hostname = "testserver"
         self.site.save()
-        
+
         # Create a news listing page
         self.news_listing = NewsListingPage(
             title="News",
@@ -356,7 +366,7 @@ class NewsListingPageViewTests(TestCase, WagtailTestUtils):
         self.news_listing.save_revision().publish()
         self.site.root_page = self.news_listing
         self.site.save()
-        response = self.client.get('/')
+        response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "News")
         self.assertContains(response, "This is the news section")
@@ -367,6 +377,6 @@ class NewsListingPageViewTests(TestCase, WagtailTestUtils):
         self.news_listing.save_revision().publish()
         self.site.root_page = self.news_listing
         self.site.save()
-        response = self.client.get('/')
+        response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context['page'], self.news_listing)
+        self.assertEqual(response.context["page"], self.news_listing)

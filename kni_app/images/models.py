@@ -1,9 +1,9 @@
-from PIL import ImageOps
 from django.db import models
+from PIL import ImageOps
 from wagtail import hooks
-from wagtail.search import index
-from wagtail.images.models import AbstractImage, AbstractRendition, Image
 from wagtail.images.image_operations import FilterOperation
+from wagtail.images.models import AbstractImage, AbstractRendition, Image
+from wagtail.search import index
 
 
 class CustomImage(AbstractImage):

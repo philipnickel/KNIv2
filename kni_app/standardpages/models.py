@@ -1,9 +1,8 @@
 from django.db import models
 from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel
-from wagtail.fields import RichTextField
+from wagtail.fields import RichTextField, StreamField
 from wagtail.search import index
 
-from wagtail.fields import StreamField
 from utils.blocks import StoryBlock
 from utils.models import BasePage
 
@@ -52,6 +51,5 @@ class IndexPage(BasePage):
             min_num=3,
             max_num=12,
         ),
-        FieldPanel("body")
+        FieldPanel("body"),
     ]
-

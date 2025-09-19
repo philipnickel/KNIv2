@@ -4,6 +4,7 @@ Use this configuration if the main production settings fail with static file err
 
 To use: Set DJANGO_SETTINGS_MODULE=KNI.settings.production_fallback
 """
+
 from .base import *  # noqa
 
 DEBUG = False
@@ -18,9 +19,24 @@ WHITENOISE_MANIFEST_STRICT = False  # Allow missing files without failing
 
 # Disable static file compression to avoid potential issues
 WHITENOISE_SKIP_COMPRESS_EXTENSIONS = [
-    'jpg', 'jpeg', 'png', 'gif', 'webp', 'zip', 'gz', 'tgz',
-    'bz2', 'tbz', 'xz', 'br', 'woff', 'woff2', 'ico', 'svg',
-    'css', 'js'  # Skip compression for CSS/JS as well
+    "jpg",
+    "jpeg",
+    "png",
+    "gif",
+    "webp",
+    "zip",
+    "gz",
+    "tgz",
+    "bz2",
+    "tbz",
+    "xz",
+    "br",
+    "woff",
+    "woff2",
+    "ico",
+    "svg",
+    "css",
+    "js",  # Skip compression for CSS/JS as well
 ]
 
 # Security configuration

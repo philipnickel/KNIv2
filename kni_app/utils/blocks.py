@@ -133,9 +133,7 @@ class FeaturedArticleBlock(blocks.StructBlock):
 
 class BaseSectionBlock(blocks.StructBlock):
     heading = blocks.CharBlock(
-        form_classname="title",
-        icon="title",
-        required=True
+        form_classname="title", icon="title", required=True
     )  # Should use H2s only
     sr_only_label = blocks.BooleanBlock(
         required=False,
@@ -150,9 +148,7 @@ class BaseSectionBlock(blocks.StructBlock):
 
 class StatisticSectionBlock(BaseSectionBlock):
     statistics = blocks.ListBlock(
-        SnippetChooserBlock(
-            "utils.Statistic"
-        ),
+        SnippetChooserBlock("utils.Statistic"),
         max_num=3,
         min_num=3,
     )
@@ -163,11 +159,7 @@ class StatisticSectionBlock(BaseSectionBlock):
 
 
 class CTASectionBlock(blocks.StructBlock):
-    heading = blocks.CharBlock(
-        form_classname="title",
-        icon="title",
-        required=True
-    )
+    heading = blocks.CharBlock(form_classname="title", icon="title", required=True)
     link = LinkStreamBlock()
     description = blocks.TextBlock(required=False)
 
@@ -184,6 +176,7 @@ class BaseCardSectionBlock(BaseSectionBlock):
         min_num=3,
         label="Card",
     )
+
     class Meta:
         abstract = True
         icon = "form"
@@ -232,14 +225,12 @@ class PrelineAccordionItemBlock(blocks.StructBlock):
 
 class PrelineAccordionBlock(blocks.StructBlock):
     heading = blocks.CharBlock(
-        max_length=255, 
+        max_length=255,
         required=False,
-        help_text="Optional heading for the accordion section"
+        help_text="Optional heading for the accordion section",
     )
     items = blocks.ListBlock(
-        PrelineAccordionItemBlock(),
-        min_num=1,
-        help_text="Add accordion items"
+        PrelineAccordionItemBlock(), min_num=1, help_text="Add accordion items"
     )
 
     class Meta:
@@ -250,25 +241,20 @@ class PrelineAccordionBlock(blocks.StructBlock):
 
 class PrelineAlertBlock(blocks.StructBlock):
     ALERT_TYPES = [
-        ('info', 'Info'),
-        ('success', 'Success'),
-        ('warning', 'Warning'),
-        ('error', 'Error'),
+        ("info", "Info"),
+        ("success", "Success"),
+        ("warning", "Warning"),
+        ("error", "Error"),
     ]
-    
+
     alert_type = blocks.ChoiceBlock(
-        choices=ALERT_TYPES,
-        default='info',
-        help_text="Choose the alert type"
+        choices=ALERT_TYPES, default="info", help_text="Choose the alert type"
     )
     title = blocks.CharBlock(
-        max_length=255,
-        required=False,
-        help_text="Optional alert title"
+        max_length=255, required=False, help_text="Optional alert title"
     )
     content = blocks.RichTextBlock(
-        features=["bold", "italic", "link"],
-        help_text="Alert message content"
+        features=["bold", "italic", "link"], help_text="Alert message content"
     )
 
     class Meta:
@@ -280,18 +266,17 @@ class PrelineAlertBlock(blocks.StructBlock):
 class PrelineCardBlock(blocks.StructBlock):
     title = blocks.CharBlock(max_length=255)
     description = blocks.RichTextBlock(
-        required=False, 
-        features=["bold", "italic", "link"]
+        required=False, features=["bold", "italic", "link"]
     )
     image = ImageChooserBlock(required=False)
     link = LinkStreamBlock(required=False, min_num=0)
     card_style = blocks.ChoiceBlock(
         choices=[
-            ('default', 'Default'),
-            ('bordered', 'Bordered'),
-            ('shadow', 'Shadow'),
+            ("default", "Default"),
+            ("bordered", "Bordered"),
+            ("shadow", "Shadow"),
         ],
-        default='default'
+        default="default",
     )
 
     class Meta:
@@ -303,10 +288,7 @@ class PrelineCardBlock(blocks.StructBlock):
 class PrelineFeatureItemBlock(blocks.StructBlock):
     title = blocks.CharBlock(max_length=255, help_text="Feature title")
     description = blocks.TextBlock(help_text="Feature description")
-    icon_svg = blocks.TextBlock(
-        required=False,
-        help_text="SVG icon code (optional)"
-    )
+    icon_svg = blocks.TextBlock(required=False, help_text="SVG icon code (optional)")
 
     class Meta:
         label = "Feature Item"
@@ -315,21 +297,16 @@ class PrelineFeatureItemBlock(blocks.StructBlock):
 
 class PrelineFeaturesBlock(blocks.StructBlock):
     heading = blocks.CharBlock(
-        max_length=255,
-        help_text="Main heading for the features section"
+        max_length=255, help_text="Main heading for the features section"
     )
     description = blocks.TextBlock(
-        required=False,
-        help_text="Description text below the heading"
+        required=False, help_text="Description text below the heading"
     )
     image = ImageChooserBlock(
-        required=False,
-        help_text="Optional hero image for the features section"
+        required=False, help_text="Optional hero image for the features section"
     )
     features = blocks.ListBlock(
-        PrelineFeatureItemBlock(),
-        min_num=1,
-        help_text="Add feature items"
+        PrelineFeatureItemBlock(), min_num=1, help_text="Add feature items"
     )
 
     class Meta:
@@ -344,12 +321,12 @@ class PrelineHeroButtonBlock(blocks.StructBlock):
     url = blocks.URLBlock(help_text="Button URL")
     style = blocks.ChoiceBlock(
         choices=[
-            ('primary', 'Primary'),
-            ('secondary', 'Secondary'),
-            ('outline', 'Outline'),
+            ("primary", "Primary"),
+            ("secondary", "Secondary"),
+            ("outline", "Outline"),
         ],
-        default='primary',
-        help_text="Button style"
+        default="primary",
+        help_text="Button style",
     )
 
     class Meta:
@@ -359,19 +336,10 @@ class PrelineHeroButtonBlock(blocks.StructBlock):
 
 class PrelineHeroReviewBlock(blocks.StructBlock):
     rating = blocks.IntegerBlock(
-        min_value=1,
-        max_value=5,
-        default=5,
-        help_text="Star rating (1-5)"
+        min_value=1, max_value=5, default=5, help_text="Star rating (1-5)"
     )
-    text = blocks.CharBlock(
-        max_length=255,
-        help_text="Review text"
-    )
-    author = blocks.CharBlock(
-        max_length=255,
-        help_text="Review author name"
-    )
+    text = blocks.CharBlock(max_length=255, help_text="Review text")
+    author = blocks.CharBlock(max_length=255, help_text="Review author name")
 
     class Meta:
         label = "Review"
@@ -379,33 +347,18 @@ class PrelineHeroReviewBlock(blocks.StructBlock):
 
 
 class PrelineHeroWithImageReviewsBlock(blocks.StructBlock):
-    heading = blocks.CharBlock(
-        max_length=255,
-        help_text="Main hero heading"
-    )
-    subheading = blocks.TextBlock(
-        required=False,
-        help_text="Subheading text"
-    )
-    description = blocks.TextBlock(
-        required=False,
-        help_text="Description text"
-    )
-    image = ImageChooserBlock(
-        required=False,
-        help_text="Hero background image"
-    )
+    heading = blocks.CharBlock(max_length=255, help_text="Main hero heading")
+    subheading = blocks.TextBlock(required=False, help_text="Subheading text")
+    description = blocks.TextBlock(required=False, help_text="Description text")
+    image = ImageChooserBlock(required=False, help_text="Hero background image")
     buttons = blocks.ListBlock(
         PrelineHeroButtonBlock(),
         min_num=1,
         max_num=2,
-        help_text="Call-to-action buttons"
+        help_text="Call-to-action buttons",
     )
     reviews = blocks.ListBlock(
-        PrelineHeroReviewBlock(),
-        min_num=1,
-        max_num=2,
-        help_text="Customer reviews"
+        PrelineHeroReviewBlock(), min_num=1, max_num=2, help_text="Customer reviews"
     )
 
     class Meta:
@@ -415,30 +368,19 @@ class PrelineHeroWithImageReviewsBlock(blocks.StructBlock):
 
 
 class PrelineHeroCenterVideoBlock(blocks.StructBlock):
-    heading = blocks.CharBlock(
-        max_length=255,
-        help_text="Main hero heading"
-    )
-    subheading = blocks.TextBlock(
-        required=False,
-        help_text="Subheading text"
-    )
-    description = blocks.TextBlock(
-        required=False,
-        help_text="Description text"
-    )
+    heading = blocks.CharBlock(max_length=255, help_text="Main hero heading")
+    subheading = blocks.TextBlock(required=False, help_text="Subheading text")
+    description = blocks.TextBlock(required=False, help_text="Description text")
     background_image = ImageChooserBlock(
-        required=False,
-        help_text="Background image for video section"
+        required=False, help_text="Background image for video section"
     )
     video_url = blocks.URLBlock(
-        required=False,
-        help_text="Video URL (YouTube, Vimeo, etc.)"
+        required=False, help_text="Video URL (YouTube, Vimeo, etc.)"
     )
     play_button_text = blocks.CharBlock(
         max_length=255,
         default="Play the overview",
-        help_text="Text for the play button"
+        help_text="Text for the play button",
     )
 
     class Meta:
@@ -448,27 +390,17 @@ class PrelineHeroCenterVideoBlock(blocks.StructBlock):
 
 
 class PrelineHeroSimpleBlock(blocks.StructBlock):
-    heading = blocks.CharBlock(
-        max_length=255,
-        help_text="Main hero heading"
-    )
-    subheading = blocks.TextBlock(
-        required=False,
-        help_text="Subheading text"
-    )
-    description = blocks.TextBlock(
-        required=False,
-        help_text="Description text"
-    )
+    heading = blocks.CharBlock(max_length=255, help_text="Main hero heading")
+    subheading = blocks.TextBlock(required=False, help_text="Subheading text")
+    description = blocks.TextBlock(required=False, help_text="Description text")
     background_image = ImageChooserBlock(
-        required=False,
-        help_text="Optional background image"
+        required=False, help_text="Optional background image"
     )
     buttons = blocks.ListBlock(
         PrelineHeroButtonBlock(),
         min_num=1,
         max_num=3,
-        help_text="Call-to-action buttons"
+        help_text="Call-to-action buttons",
     )
 
     class Meta:
@@ -482,12 +414,12 @@ class StoryBlock(blocks.StreamBlock):
     preline_hero_image_reviews = PrelineHeroWithImageReviewsBlock(group="Hero Sections")
     preline_hero_center_video = PrelineHeroCenterVideoBlock(group="Hero Sections")
     preline_hero_simple = PrelineHeroSimpleBlock(group="Hero Sections")
-    
+
     # Content Sections
     section = SectionBlock(group="Content")
     cta = CTASectionBlock(group="Content")
     statistics = StatisticSectionBlock(group="Content")
-    
+
     # PrelineUI Components
     preline_accordion = PrelineAccordionBlock(group="PrelineUI Components")
     preline_alert = PrelineAlertBlock(group="PrelineUI Components")

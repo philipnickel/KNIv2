@@ -10,7 +10,7 @@ class HomePageModelTests(TestCase, WagtailTestUtils):
     def setUp(self):
         # Get the root page
         self.root_page = Page.get_first_root_node()
-        
+
         # Create a site
         self.site = Site.objects.get(is_default_site=True)
         self.site.hostname = "testserver"
@@ -24,7 +24,7 @@ class HomePageModelTests(TestCase, WagtailTestUtils):
             introduction="This is a test home page",
         )
         self.root_page.add_child(instance=home_page)
-        
+
         self.assertEqual(home_page.title, "Test Home Page")
         self.assertEqual(home_page.slug, "test-home")
         self.assertEqual(home_page.introduction, "This is a test home page")
@@ -37,7 +37,7 @@ class HomePageModelTests(TestCase, WagtailTestUtils):
             slug="test-home",
         )
         self.root_page.add_child(instance=home_page)
-        
+
         self.assertEqual(home_page.template, "pages/home_page.html")
 
     def test_home_page_search_fields(self):
@@ -48,7 +48,7 @@ class HomePageModelTests(TestCase, WagtailTestUtils):
             introduction="This is a test home page",
         )
         self.root_page.add_child(instance=home_page)
-        
+
         # Check that introduction is in search fields
         search_fields = [field.field_name for field in home_page.search_fields]
         self.assertIn("introduction", search_fields)
@@ -60,9 +60,13 @@ class HomePageModelTests(TestCase, WagtailTestUtils):
             slug="test-home",
         )
         self.root_page.add_child(instance=home_page)
-        
+
         # Check that key panels exist
-        panel_names = [panel.field_name for panel in home_page.content_panels if hasattr(panel, 'field_name')]
+        panel_names = [
+            panel.field_name
+            for panel in home_page.content_panels
+            if hasattr(panel, "field_name")
+        ]
         self.assertIn("introduction", panel_names)
         self.assertIn("hero_cta", panel_names)
         self.assertIn("body", panel_names)
@@ -74,9 +78,9 @@ class HomePageModelTests(TestCase, WagtailTestUtils):
             slug="test-home",
         )
         self.root_page.add_child(instance=home_page)
-        
+
         # Test that hero_cta is a StreamField
-        self.assertTrue(hasattr(home_page, 'hero_cta'))
+        self.assertTrue(hasattr(home_page, "hero_cta"))
         self.assertEqual(len(home_page.hero_cta), 0)
 
     def test_home_page_featured_section(self):
@@ -87,7 +91,7 @@ class HomePageModelTests(TestCase, WagtailTestUtils):
             featured_section_title="Featured Content",
         )
         self.root_page.add_child(instance=home_page)
-        
+
         self.assertEqual(home_page.featured_section_title, "Featured Content")
 
     def test_home_page_inheritance(self):
@@ -97,11 +101,11 @@ class HomePageModelTests(TestCase, WagtailTestUtils):
             slug="test-home",
         )
         self.root_page.add_child(instance=home_page)
-        
+
         # Test BasePage functionality
-        self.assertTrue(hasattr(home_page, 'social_image'))
-        self.assertTrue(hasattr(home_page, 'listing_image'))
-        self.assertTrue(hasattr(home_page, 'appear_in_search_results'))
+        self.assertTrue(hasattr(home_page, "social_image"))
+        self.assertTrue(hasattr(home_page, "listing_image"))
+        self.assertTrue(hasattr(home_page, "appear_in_search_results"))
         self.assertTrue(home_page.appear_in_search_results)  # Default should be True
 
 
@@ -109,12 +113,12 @@ class HomePageViewTests(TestCase, WagtailTestUtils):
     def setUp(self):
         # Get the root page
         self.root_page = Page.get_first_root_node()
-        
+
         # Create a site
         self.site = Site.objects.get(is_default_site=True)
         self.site.hostname = "testserver"
         self.site.save()
-        
+
         # Create a home page
         self.home_page = HomePage(
             title="Test Home Page",
@@ -127,13 +131,13 @@ class HomePageViewTests(TestCase, WagtailTestUtils):
 
     def test_home_page_view(self):
         """Test that the home page can be viewed."""
-        response = self.client.get('/')
+        response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Test Home Page")
         self.assertContains(response, "This is a test home page")
 
     def test_home_page_context(self):
         """Test that the home page context is correct."""
-        response = self.client.get('/')
+        response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context['page'], self.home_page)
+        self.assertEqual(response.context["page"], self.home_page)

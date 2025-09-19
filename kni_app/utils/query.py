@@ -4,7 +4,7 @@ from django.db.models import Case, IntegerField, QuerySet, When
 def order_by_pk_position(
     queryset: QuerySet,
     pks,
-    exclude_non_matches = False,
+    exclude_non_matches=False,
 ) -> QuerySet:
     """
     Returns the supplied `queryset` ordered according to the

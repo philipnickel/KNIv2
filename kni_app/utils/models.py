@@ -1,23 +1,22 @@
 from io import BytesIO
+
 from bs4 import BeautifulSoup
+from django.contrib.staticfiles.finders import find
 from django.core.exceptions import FieldDoesNotExist, ValidationError
 from django.core.files.images import ImageFile
-from django.contrib.staticfiles.finders import find
-from django.db import models, transaction, IntegrityError
+from django.db import IntegrityError, models, router, transaction
 from django.db.models import QuerySet
-from django.db import router
 from django.utils.decorators import method_decorator
 from django.utils.functional import cached_property
 from django.utils.text import slugify
 from modelcluster.fields import ParentalKey
-from willow.image import Image as WillowImage
-
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
 from wagtail.fields import RichTextField
 from wagtail.models import Orderable, Page
 from wagtail.rich_text import expand_db_html
 from wagtail.snippets.models import register_snippet
+from willow.image import Image as WillowImage
 
 from images.models import CustomImage
 from utils.cache import get_default_cache_control_decorator
@@ -251,41 +250,52 @@ class SystemMessagesSettings(BaseSiteSetting):
             ],
             heading="404 page",
         ),
-        FieldPanel("placeholder_image",),
+        FieldPanel(
+            "placeholder_image",
+        ),
         MultiFieldPanel(
             [
-                FieldPanel("footer_newsletter_signup_title",),
-                FieldPanel("footer_newsletter_signup_description",),
-                FieldPanel("footer_newsletter_signup_link",),
+                FieldPanel(
+                    "footer_newsletter_signup_title",
+                ),
+                FieldPanel(
+                    "footer_newsletter_signup_description",
+                ),
+                FieldPanel(
+                    "footer_newsletter_signup_link",
+                ),
             ],
             heading="Footer",
         ),
     ]
 
     def get_placeholder_image(self):
-        """
-        """
+        """ """
         if self.placeholder_image:
             return self.placeholder_image
 
         # Get the absolute path to the image file
-        absolute_path = find('images/placeholder-image.webp')
+        absolute_path = find("images/placeholder-image.webp")
         if absolute_path:
-            with open(absolute_path, 'rb') as f:
+            with open(absolute_path, "rb") as f:
                 image_bytes = f.read()
 
             img_file = ImageFile(BytesIO(image_bytes), name="Placeholder Image")
             im = WillowImage.open(img_file)
             width, height = im.get_size()
 
-            new_default_image = CustomImage(title="Placeholder Image", file=img_file, width=width, height=height)
+            new_default_image = CustomImage(
+                title="Placeholder Image", file=img_file, width=width, height=height
+            )
             new_default_image.save()
             new_default_image.tags.add("placeholder")
 
             self.placeholder_image = new_default_image
             self.save()  # Save to persist new image as placeholder
             return self.placeholder_image
-        raise ValidationError("No placeholder image found. Please upload a placeholder image.")
+        raise ValidationError(
+            "No placeholder image found. Please upload a placeholder image."
+        )
 
 
 # Apply default cache headers on this page model's serve method.
@@ -350,7 +360,9 @@ class BasePage(SocialFields, ListingFields, Page):
             introduction_value = getattr(self, "introduction", None)
             if introduction_value:
                 if isinstance(introduction_field, RichTextField):
-                    soup = BeautifulSoup(expand_db_html(introduction_value), "html.parser")
+                    soup = BeautifulSoup(
+                        expand_db_html(introduction_value), "html.parser"
+                    )
                     return soup.text
                 else:
                     return introduction_value

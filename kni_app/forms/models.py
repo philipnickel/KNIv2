@@ -1,18 +1,16 @@
 from django.db import models
 from modelcluster.fields import ParentalKey
-from wagtail.admin.panels import (
-    FieldPanel, FieldRowPanel,
-    InlinePanel, MultiFieldPanel
-)
-from wagtail.fields import RichTextField
+from wagtail.admin.panels import (FieldPanel, FieldRowPanel, InlinePanel,
+                                  MultiFieldPanel)
 from wagtail.contrib.forms.models import AbstractEmailForm, AbstractFormField
 from wagtail.contrib.forms.panels import FormSubmissionsPanel
+from wagtail.fields import RichTextField
 
 from utils.models import BasePage
 
 
 class FormField(AbstractFormField):
-    page = ParentalKey('FormPage', on_delete=models.CASCADE, related_name='form_fields')
+    page = ParentalKey("FormPage", on_delete=models.CASCADE, related_name="form_fields")
 
 
 class FormPage(AbstractEmailForm, BasePage):
@@ -27,14 +25,19 @@ class FormPage(AbstractEmailForm, BasePage):
 
     content_panels = AbstractEmailForm.content_panels + [
         FormSubmissionsPanel(),
-        FieldPanel('introduction'),
-        InlinePanel('form_fields', label="Form fields"),
-        FieldPanel('thank_you_text'),
-        MultiFieldPanel([
-            FieldRowPanel([
-                FieldPanel('from_address', classname="col6"),
-                FieldPanel('to_address', classname="col6"),
-            ]),
-            FieldPanel('subject'),
-        ], "Email"),
+        FieldPanel("introduction"),
+        InlinePanel("form_fields", label="Form fields"),
+        FieldPanel("thank_you_text"),
+        MultiFieldPanel(
+            [
+                FieldRowPanel(
+                    [
+                        FieldPanel("from_address", classname="col6"),
+                        FieldPanel("to_address", classname="col6"),
+                    ]
+                ),
+                FieldPanel("subject"),
+            ],
+            "Email",
+        ),
     ]

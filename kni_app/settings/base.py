@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+
 import dj_database_url
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -185,6 +186,7 @@ CACHES = {
     }
 }
 
+
 def get_first_env(*keys, default=None):
     """
     Return the first set environment variable (with a truthy value)
@@ -200,7 +202,9 @@ def get_first_env(*keys, default=None):
 # Check for either DEFAULT_* (Divio) or AWS_* environment variables
 
 # AWS_STORAGE_BUCKET_NAME: The name of the S3 bucket to use for storage.
-AWS_STORAGE_BUCKET_NAME = get_first_env("AWS_STORAGE_BUCKET_NAME", "DEFAULT_STORAGE_BUCKET")
+AWS_STORAGE_BUCKET_NAME = get_first_env(
+    "AWS_STORAGE_BUCKET_NAME", "DEFAULT_STORAGE_BUCKET"
+)
 
 # Only proceed if AWS_STORAGE_BUCKET_NAME is set
 if AWS_STORAGE_BUCKET_NAME:
@@ -211,15 +215,21 @@ if AWS_STORAGE_BUCKET_NAME:
     STORAGES["default"]["BACKEND"] = "storages.backends.s3boto3.S3Boto3Storage"
 
     # AWS_ACCESS_KEY_ID: The access key ID for authenticating with AWS S3.
-    AWS_ACCESS_KEY_ID = get_first_env("AWS_ACCESS_KEY_ID", "DEFAULT_STORAGE_ACCESS_KEY_ID")
+    AWS_ACCESS_KEY_ID = get_first_env(
+        "AWS_ACCESS_KEY_ID", "DEFAULT_STORAGE_ACCESS_KEY_ID"
+    )
 
     # AWS_SECRET_ACCESS_KEY: The secret access key for authenticating with AWS S3.
-    AWS_SECRET_ACCESS_KEY = get_first_env("AWS_SECRET_ACCESS_KEY", "DEFAULT_STORAGE_SECRET_ACCESS_KEY")
+    AWS_SECRET_ACCESS_KEY = get_first_env(
+        "AWS_SECRET_ACCESS_KEY", "DEFAULT_STORAGE_SECRET_ACCESS_KEY"
+    )
 
     # We generally use this setting in the production to put the S3 bucket
     # behind a CDN using a custom domain, e.g. media.llamasavers.com.
     # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#cloudfront
-    if custom_domain := get_first_env("AWS_S3_CUSTOM_DOMAIN", "DEFAULT_STORAGE_CUSTOM_DOMAIN"):
+    if custom_domain := get_first_env(
+        "AWS_S3_CUSTOM_DOMAIN", "DEFAULT_STORAGE_CUSTOM_DOMAIN"
+    ):
         AWS_S3_CUSTOM_DOMAIN = custom_domain
 
     # When signing URLs is facilitated, the region must be set, because the
@@ -329,4 +339,4 @@ CACHE_CONTROL_STALE_WHILE_REVALIDATE = int(
     os.environ.get("CACHE_CONTROL_STALE_WHILE_REVALIDATE", 30)
 )
 
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")

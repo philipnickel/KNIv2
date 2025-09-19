@@ -5,7 +5,9 @@ DEBUG = False
 # Static files configuration for production
 # Use WhiteNoise's CompressedManifestStaticFilesStorage for optimal performance
 # This provides both compression and manifest hashing for cache busting
-STORAGES["staticfiles"]["BACKEND"] = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STORAGES["staticfiles"][
+    "BACKEND"
+] = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # WhiteNoise manifest strict mode keeps the build honest by failing on missing assets
 WHITENOISE_MANIFEST_STRICT = True
@@ -19,30 +21,47 @@ WHITENOISE_USE_FINDERS = False  # Don't use finders in production for better per
 
 # Skip compression for files that are already compressed or small
 WHITENOISE_SKIP_COMPRESS_EXTENSIONS = [
-    'jpg', 'jpeg', 'png', 'gif', 'webp', 'zip', 'gz', 'tgz',
-    'bz2', 'tbz', 'xz', 'br', 'woff', 'woff2'
+    "jpg",
+    "jpeg",
+    "png",
+    "gif",
+    "webp",
+    "zip",
+    "gz",
+    "tgz",
+    "bz2",
+    "tbz",
+    "xz",
+    "br",
+    "woff",
+    "woff2",
 ]
 
 # Set Content-Type for common file extensions that might be missing
 WHITENOISE_MIMETYPES = {
-    '.js.map': 'application/json',
-    '.css.map': 'application/json',
-    '.webmanifest': 'application/manifest+json',
-    '.woff2': 'font/woff2',
-    '.woff': 'font/woff',
+    ".js.map": "application/json",
+    ".css.map": "application/json",
+    ".webmanifest": "application/manifest+json",
+    ".woff2": "font/woff2",
+    ".woff": "font/woff",
 }
 
 # Additional static file optimizations
 # Serve static files with proper headers
-WHITENOISE_ADD_HEADERS_FUNCTION = 'whitenoise.middleware.add_headers_function'
+WHITENOISE_ADD_HEADERS_FUNCTION = "whitenoise.middleware.add_headers_function"
 
 # Cache static files for 1 year (since they have hashed names)
-WHITENOISE_IMMUTABLE_FILE_TEST = lambda path, url: url.startswith('/static/') and (
-    url.endswith('.js') or url.endswith('.css') or 
-    url.endswith('.png') or url.endswith('.jpg') or 
-    url.endswith('.jpeg') or url.endswith('.gif') or 
-    url.endswith('.webp') or url.endswith('.svg') or
-    url.endswith('.woff') or url.endswith('.woff2')
+WHITENOISE_IMMUTABLE_FILE_TEST = lambda path, url: url.startswith("/static/") and (
+    url.endswith(".js")
+    or url.endswith(".css")
+    or url.endswith(".png")
+    or url.endswith(".jpg")
+    or url.endswith(".jpeg")
+    or url.endswith(".gif")
+    or url.endswith(".webp")
+    or url.endswith(".svg")
+    or url.endswith(".woff")
+    or url.endswith(".woff2")
 )
 
 # Security configuration
