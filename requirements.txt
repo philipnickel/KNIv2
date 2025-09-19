@@ -1,0 +1,66 @@
+# =============================================================================
+# CORE DEPENDENCIES
+# =============================================================================
+
+# Django and Wagtail
+Django
+wagtail
+wagtail[redis]
+
+# Database
+psycopg2-binary
+
+# Production server
+gunicorn
+
+# Static files
+whitenoise
+
+# Environment variables
+python-decouple
+dj-database-url
+
+# Image processing
+Pillow
+
+# =============================================================================
+# DEVELOPMENT DEPENDENCIES
+# =============================================================================
+
+# Django development tools
+django-debug-toolbar
+django-extensions
+
+# Code quality and formatting
+black
+flake8
+isort
+mypy
+
+# Security scanning
+safety
+bandit
+semgrep
+
+# =============================================================================
+# TESTING DEPENDENCIES
+# =============================================================================
+
+# Testing framework
+pytest
+pytest-django
+pytest-cov
+
+# Coverage reporting
+coverage
+
+# End-to-end testing
+playwright
+
+# =============================================================================
+# DOCUMENTATION DEPENDENCIES
+# =============================================================================
+
+# MkDocs documentation
+mkdocs>=1.5.0
+mkdocs-material>=9.0.0

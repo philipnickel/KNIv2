@@ -29,7 +29,7 @@
         src="{{ author_avatar.url }}"
         width="{{ author_avatar.width }}"
         height="{{ author_avatar.height }}"
-        alt="{{ author_avatar.alt }}"
+        alt="{{ author_avatar.description|default:page.author.title }}"
         class="w-10 h-10 rounded-full"
         />
         {{ page.author.title }}
@@ -50,7 +50,7 @@
                 src="{{ page_image_1x_webp.url }}"
                 width="{{ page_image_1x_webp.width }}"
                 height="{{ page_image_1x_webp.height }}"
-                alt="{% firstof page.image.0.value.image_alt_text page_image_1x_webp.alt %}"
+                alt="{% firstof page.image.0.value.image_alt_text page_image_1x_webp.description %}"
                 class="aspect-video w-full object-cover"
                 {% if page_image_1x_webp.focal_point %}
                 style="{{ page_image_1x_webp.object_position_style }}"

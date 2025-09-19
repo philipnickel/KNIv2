@@ -1,0 +1,418 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: ["main", "staging", "develop"]
+  pull_request:
+    branches: ["main", "staging", "develop"]
+  workflow_dispatch:
+
+env:
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  test:
+    name: 🧪 Test Suite
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        python-version: ['3.11', '3.12']
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-${{ matrix.python-version }}-
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Set up test environment
+        run: |
+          cd kni_app
+          python manage.py collectstatic --noinput --settings=settings.test
+
+      - name: Run tests
+        run: |
+          cd kni_app
+          python manage.py test --settings=settings.test --verbosity=2
+
+      - name: Generate coverage report
+        run: |
+          cd kni_app
+          pip install coverage
+          coverage run --source='.' manage.py test --settings=settings.test
+          coverage report
+          coverage xml
+
+      - name: Upload coverage to Codecov
+        if: matrix.python-version == '3.11'
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./kni_app/coverage.xml
+          flags: unittests
+          name: codecov-umbrella
+
+  lint:
+    name: 🔍 Code Quality
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Black code formatter check
+        run: |
+          black --check --diff .
+
+      - name: Run isort import sorter check
+        run: |
+          isort --check-only --diff .
+
+      - name: Run flake8 linter
+        run: |
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+      - name: Run mypy type checker
+        run: |
+          mypy kni_app/ --ignore-missing-imports
+
+  security:
+    name: 🔒 Security Checks
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run safety check
+        run: |
+          safety check --json --output safety-report.json
+
+      - name: Run bandit security linter
+        run: |
+          bandit -r kni_app/ -f json -o bandit-report.json
+
+      - name: Run semgrep security scan
+        run: |
+          semgrep --config=auto kni_app/ --json --output=semgrep-report.json
+
+      - name: Upload security reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-reports
+          path: |
+            safety-report.json
+            bandit-report.json
+            semgrep-report.json
+          retention-days: 30
+
+      - name: Comment PR with security findings
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            
+            // Read security reports
+            let safetyReport = {};
+            let banditReport = {};
+            let semgrepReport = {};
+            
+            try {
+              safetyReport = JSON.parse(fs.readFileSync('safety-report.json', 'utf8'));
+            } catch (e) {
+              console.log('No safety report found');
+            }
+            
+            try {
+              banditReport = JSON.parse(fs.readFileSync('bandit-report.json', 'utf8'));
+            } catch (e) {
+              console.log('No bandit report found');
+            }
+            
+            try {
+              semgrepReport = JSON.parse(fs.readFileSync('semgrep-report.json', 'utf8'));
+            } catch (e) {
+              console.log('No semgrep report found');
+            }
+            
+            // Generate comment
+            let comment = '## 🔒 Security Scan Results\n\n';
+            
+            if (safetyReport.vulnerabilities && safetyReport.vulnerabilities.length > 0) {
+              comment += '### ⚠️ Dependency Vulnerabilities\n';
+              safetyReport.vulnerabilities.forEach(vuln => {
+                comment += `- **${vuln.package}**: ${vuln.vulnerability_id} - ${vuln.advisory}\n`;
+              });
+              comment += '\n';
+            } else {
+              comment += '### ✅ No dependency vulnerabilities found\n\n';
+            }
+            
+            if (banditReport.results && banditReport.results.length > 0) {
+              comment += '### ⚠️ Code Security Issues\n';
+              banditReport.results.forEach(result => {
+                comment += `- **${result.filename}:${result.line_number}**: ${result.issue_severity} - ${result.issue_text}\n`;
+              });
+              comment += '\n';
+            } else {
+              comment += '### ✅ No code security issues found\n\n';
+            }
+            
+            if (semgrepReport.results && semgrepReport.results.length > 0) {
+              comment += '### ⚠️ Semgrep Findings\n';
+              semgrepReport.results.forEach(result => {
+                comment += `- **${result.path}:${result.start.line}**: ${result.check_id} - ${result.message}\n`;
+              });
+            } else {
+              comment += '### ✅ No semgrep findings\n\n';
+            }
+            
+            // Post comment
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+  e2e:
+    name: 🎭 End-to-End Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Set up test environment
+        run: |
+          cd kni_app
+          python manage.py collectstatic --noinput --settings=settings.test
+
+      - name: Create test data
+        run: |
+          cd kni_app
+          python manage.py shell --settings=settings.test -c "
+          from django.contrib.auth import get_user_model
+          from wagtail.models import Site, Page
+          from home.models import HomePage
+          
+          # Create superuser
+          User = get_user_model()
+          if not User.objects.filter(username='admin').exists():
+              User.objects.create_superuser('admin', 'admin@example.com', 'admin')
+          
+          # Create home page if it doesn't exist
+          if not HomePage.objects.exists():
+              root = Page.get_first_root_node()
+              home = HomePage(title='Test Home', slug='home')
+              root.add_child(instance=home)
+              home.save_revision().publish()
+              
+              # Set as site root
+              site = Site.objects.get(is_default_site=True)
+              site.root_page = home
+              site.save()
+          "
+
+      - name: Install Playwright
+        run: |
+          pip install playwright
+          playwright install --with-deps
+
+      - name: Start Django server
+        run: |
+          cd kni_app
+          python manage.py runserver 0.0.0.0:8000 --settings=settings.test &
+          sleep 10
+
+      - name: Run Playwright tests
+        run: |
+          python -c "
+          import asyncio
+          from playwright.async_api import async_playwright
+          
+          async def run_tests():
+              async with async_playwright() as p:
+                  browser = await p.chromium.launch()
+                  page = await browser.new_page()
+                  
+                  # Test home page
+                  await page.goto('http://localhost:8000/')
+                  await page.wait_for_load_state('networkidle')
+                  
+                  # Take screenshot
+                  await page.screenshot(path='home-page.png')
+                  
+                  # Test admin page
+                  await page.goto('http://localhost:8000/admin/')
+                  await page.wait_for_load_state('networkidle')
+                  
+                  # Take screenshot
+                  await page.screenshot(path='admin-page.png')
+                  
+                  # Test login
+                  await page.fill('input[name=\"username\"]', 'admin')
+                  await page.fill('input[name=\"password\"]', 'admin')
+                  await page.click('input[type=\"submit\"]')
+                  await page.wait_for_load_state('networkidle')
+                  
+                  # Take screenshot
+                  await page.screenshot(path='admin-login.png')
+                  
+                  await browser.close()
+                  
+                  print('✅ E2E tests completed successfully!')
+          
+          asyncio.run(run_tests())
+          "
+
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-screenshots
+          path: |
+            home-page.png
+            admin-page.png
+            admin-login.png
+          retention-days: 30
+
+  build:
+    name: 🏗️ Build
+    needs: [test, lint, security]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging'
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Build static files
+        run: |
+          cd kni_app
+          python manage.py collectstatic --noinput
+
+      - name: Create build artifact
+        run: |
+          tar -czf kni-build.tar.gz kni_app/ requirements.txt Makefile
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: kni-build
+          path: kni-build.tar.gz
+          retention-days: 30
+
+  deploy-staging:
+    name: 🚀 Deploy to Staging
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/staging'
+    environment: staging
+    
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: kni-build
+          path: .
+
+      - name: Deploy to staging
+        run: |
+          echo "🚀 Deploying to staging environment..."
+          # Add your staging deployment commands here
+          # For example: rsync, docker deploy, etc.
+
+  deploy-production:
+    name: 🚀 Deploy to Production
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    environment: production
+    
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: kni-build
+          path: .
+
+      - name: Deploy to production
+        run: |
+          echo "🚀 Deploying to production environment..."
+          # Add your production deployment commands here
+          # For example: rsync, docker deploy, etc.
+
+  notify:
+    name: 📢 Notify
+    needs: [test, lint, security, e2e]
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+      - name: Notify on success
+        if: needs.test.result == 'success' && needs.lint.result == 'success' && needs.security.result == 'success' && needs.e2e.result == 'success'
+        run: |
+          echo "✅ All checks passed successfully!"
+
+      - name: Notify on failure
+        if: needs.test.result == 'failure' || needs.lint.result == 'failure' || needs.security.result == 'failure' || needs.e2e.result == 'failure'
+        run: |
+          echo "❌ Some checks failed. Please review the logs."

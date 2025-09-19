@@ -12,7 +12,7 @@ const options = {
         'main': `./static_src/javascript/main.js`, // prettier-ignore
     },
     resolve: {
-        extensions: ['.js'],
+        extensions: ['.js', '.ts', '.tsx'],
     },
     output: {
         path: path.resolve(`./static_compiled/`),
@@ -38,6 +38,11 @@ const options = {
     ],
     module: {
         rules: [
+            {
+                test: /\.(ts|tsx)$/,
+                use: 'ts-loader',
+                exclude: /node_modules/,
+            },
             {
                 test: /\.(scss|css)$/,
                 use: [

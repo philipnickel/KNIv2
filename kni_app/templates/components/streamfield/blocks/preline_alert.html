@@ -1,0 +1,81 @@
+{% load wagtailcore_tags %}
+
+{% if value.alert_type == 'info' %}
+    {% with alert_classes="bg-blue-50 border-blue-200 text-blue-800 dark:bg-blue-800/10 dark:border-blue-900 dark:text-blue-400" icon_classes="text-blue-500 dark:text-blue-400" %}
+        <div class="hs-removing:translate-x-5 hs-removing:opacity-0 transition duration-300 ease-in p-4 {{ alert_classes }} border rounded-lg" role="alert">
+            <div class="flex">
+                <svg class="flex-shrink-0 size-4 {{ icon_classes }} mt-0.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="m9 12 2 2 4-4"/>
+                </svg>
+                <div class="ms-3">
+                    {% if value.title %}
+                        <h3 class="text-sm font-semibold">{{ value.title }}</h3>
+                    {% endif %}
+                    <div class="text-sm">
+                        {{ value.content|richtext }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endwith %}
+{% elif value.alert_type == 'success' %}
+    {% with alert_classes="bg-green-50 border-green-200 text-green-800 dark:bg-green-800/10 dark:border-green-900 dark:text-green-400" icon_classes="text-green-500 dark:text-green-400" %}
+        <div class="hs-removing:translate-x-5 hs-removing:opacity-0 transition duration-300 ease-in p-4 {{ alert_classes }} border rounded-lg" role="alert">
+            <div class="flex">
+                <svg class="flex-shrink-0 size-4 {{ icon_classes }} mt-0.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="m9 12 2 2 4-4"/>
+                </svg>
+                <div class="ms-3">
+                    {% if value.title %}
+                        <h3 class="text-sm font-semibold">{{ value.title }}</h3>
+                    {% endif %}
+                    <div class="text-sm">
+                        {{ value.content|richtext }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endwith %}
+{% elif value.alert_type == 'warning' %}
+    {% with alert_classes="bg-yellow-50 border-yellow-200 text-yellow-800 dark:bg-yellow-800/10 dark:border-yellow-900 dark:text-yellow-400" icon_classes="text-yellow-500 dark:text-yellow-400" %}
+        <div class="hs-removing:translate-x-5 hs-removing:opacity-0 transition duration-300 ease-in p-4 {{ alert_classes }} border rounded-lg" role="alert">
+            <div class="flex">
+                <svg class="flex-shrink-0 size-4 {{ icon_classes }} mt-0.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+                    <path d="M12 9v4"/>
+                    <path d="M12 17h.01"/>
+                </svg>
+                <div class="ms-3">
+                    {% if value.title %}
+                        <h3 class="text-sm font-semibold">{{ value.title }}</h3>
+                    {% endif %}
+                    <div class="text-sm">
+                        {{ value.content|richtext }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endwith %}
+{% elif value.alert_type == 'error' %}
+    {% with alert_classes="bg-red-50 border-red-200 text-red-800 dark:bg-red-800/10 dark:border-red-900 dark:text-red-400" icon_classes="text-red-500 dark:text-red-400" %}
+        <div class="hs-removing:translate-x-5 hs-removing:opacity-0 transition duration-300 ease-in p-4 {{ alert_classes }} border rounded-lg" role="alert">
+            <div class="flex">
+                <svg class="flex-shrink-0 size-4 {{ icon_classes }} mt-0.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="15" y1="9" x2="9" y2="15"/>
+                    <line x1="9" y1="9" x2="15" y2="15"/>
+                </svg>
+                <div class="ms-3">
+                    {% if value.title %}
+                        <h3 class="text-sm font-semibold">{{ value.title }}</h3>
+                    {% endif %}
+                    <div class="text-sm">
+                        {{ value.content|richtext }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endwith %}
+{% endif %}

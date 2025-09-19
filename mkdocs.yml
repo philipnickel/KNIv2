@@ -1,0 +1,99 @@
+site_name: KNI Documentation
+site_description: Documentation for the KNI Django/Wagtail application
+site_author: KNI Team
+site_url: https://docs.kni.example.com
+
+# Documentation directory
+docs_dir: docs_src
+site_dir: docs/site
+
+# Repository
+repo_name: philipnickel/KNIv2
+repo_url: https://github.com/philipnickel/KNIv2
+edit_uri: edit/main/docs/
+
+# Configuration
+theme:
+  name: material
+  palette:
+    # Palette toggle for light mode
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Palette toggle for dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.path
+    - navigation.top
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - content.action.edit
+    - content.action.view
+  font:
+    text: Roboto
+    code: Roboto Mono
+
+# Plugins
+plugins:
+  - search
+
+# Extensions
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.superfences
+  - pymdownx.tilde
+  - admonition
+  - pymdownx.details
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+
+# Page tree
+nav:
+  - Home: index.md
+  - Quick Start: quick-start.md
+  - Architecture: architecture.md
+  - Deployment: deployment.md
+  - Workflow: workflow.md
+  - Project Structure: PROJECT_STRUCTURE.md
+
+# Extra
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/philipnickel/KNIv2
+  version:
+    provider: mike
+
+# Copyright
+copyright: Copyright &copy; 2024 KNI Team

@@ -1,11 +1,13 @@
 const plugin = require('tailwindcss/plugin');
 const colors = require('tailwindcss/colors')
+const preline = require('preline/plugin');
 
 module.exports = {
     darkMode: 'class',
     content: [
         './templates/**/*.html',
         './static_src/**/*.{js,ts}',
+        './node_modules/preline/dist/*.js',
     ],
     theme: {
         // Properties directly inside of theme will overwrite all tailwinds default properties for that attribute
@@ -74,5 +76,8 @@ module.exports = {
                 'slash': `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='#26899E' viewBox='0 0 11 11'%3E%3Cpath d='M1.78239 10.8013L0.900391 9.99126L4.19439 6.60726L4.78839 7.14726L1.78239 10.8013ZM7.39839 4.33926L6.80439 3.79926L9.81039 0.145264L10.6924 0.955263L7.39839 4.33926Z' /%3E%3C/svg%3E");`
             },
         },
-    }
+    },
+    plugins: [
+        preline,
+    ]
 };

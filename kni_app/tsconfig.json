@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true
+  },
+  "include": [
+    "static_src/**/*",
+    "node_modules/preline/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "static_compiled"
+  ]
+}
